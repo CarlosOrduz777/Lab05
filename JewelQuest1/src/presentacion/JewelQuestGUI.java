@@ -2,10 +2,12 @@ package presentacion;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class JewelQuestGUI extends JFrame{
+public class JewelQuestGUI extends JFrame implements ActionListener {
     private JMenuBar menuBar;
     private JMenu menu;
     private JMenuItem nuevo,abrir,salvar,salvarComo,salir;
@@ -46,6 +48,17 @@ public class JewelQuestGUI extends JFrame{
                 close();
             }
         });
+        prepareMenuAcciones();
+    }
+
+    private void prepareMenuAcciones(){
+        salir.addActionListener(this);
+    }
+
+    public void actionPerformed(ActionEvent e){
+        if(e.getSource() == salir){
+            close();
+        }
     }
 
     private void close(){
