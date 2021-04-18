@@ -38,5 +38,8 @@ public class JewelQuestGUI extends JFrame{
         JewelQuestGUI gui = new JewelQuestGUI();
         gui.setVisible(true);
     }
+    /*
+    Cambios JewelQuestGUI
+     */
 
 }
