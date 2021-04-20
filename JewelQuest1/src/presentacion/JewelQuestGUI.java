@@ -1,5 +1,7 @@
 package presentacion;
 
+import org.w3c.dom.DOMImplementation;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -12,6 +14,12 @@ public class JewelQuestGUI extends JFrame implements ActionListener {
     private JMenuBar menuBar;
     private JMenu menu;
     private JMenuItem nuevo,abrir,salvar,salvarComo,salir;
+    private JLabel fondo;
+    private JPanel grillaBotones;
+    private JButton jugar;
+    private JButton scoreBoard;
+    private JLabel titulo;
+    private JPanel principal;
 
     private JewelQuestGUI(){
         this.prepareElementos();
@@ -25,6 +33,41 @@ public class JewelQuestGUI extends JFrame implements ActionListener {
         setLocationRelativeTo(null);
 
         prepareElementosMenu();
+        prepareElementosPrincipal();
+    }
+    private void prepareElementosPrincipal(){
+        fondo = new JLabel();
+        fondo.setIcon(new ImageIcon(getClass().getResource("fondo.jpg")));
+        Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+        fondo.setBounds(270,10,200,70);
+
+        titulo = new JLabel("JEWEL  \n"+"QUEST");
+        principal = new JPanel();
+        principal.add(fondo);
+        principal.add(titulo);
+        add(principal);
+
+
+        grillaBotones = new JPanel();
+        Dimension dimension = new Dimension();
+        dimension.setSize(40,30);
+        grillaBotones.setSize(dimension);
+        grillaBotones.setLayout(new GridLayout(2,1));
+        grillaBotones.setLocation(50,50);
+        jugar = new JButton("Play");
+        Dimension d2 = new Dimension();
+        d2.setSize((int)dimension.getWidth()/20,(int)dimension.getHeight()/20);
+        jugar.setSize(d2);
+        grillaBotones.add(jugar);
+        scoreBoard = new JButton("Score Board");
+        scoreBoard.setSize(d2);
+        grillaBotones.add(scoreBoard);
+
+        add(grillaBotones);
+
+
+
+
     }
     private void prepareElementosMenu(){
         menuBar = new JMenuBar();
