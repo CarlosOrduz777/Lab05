@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Board {
-    private int widht = 10;
-    private int length = 10;
+    private int widht = 6;
+    private int length = 6;
     private Integer[][] completed;
     private int score = 0;
     private Element[][] elements;
@@ -77,7 +77,7 @@ public class Board {
            Element b = elements[x][y - 1];
            elements [x][y] = b;
            elements [x][y - 1] = a;
-            if (checkForThree(x,y) > 0 || checkForThree(x,y - 1)){
+            if (checkForThree(x,y) > 0 || checkForThree(x,y - 1) >0){
                 return true;
             }
             else {
@@ -89,7 +89,7 @@ public class Board {
             Element b = elements[x - 1][y];
             elements [x][y] = b;
             elements [x - 1][y] = a;
-            if (checkForThree(x,y) > 0 || checkForThree(x - 1,y)){
+            if (checkForThree(x,y) > 0 || checkForThree(x - 1,y)>0){
                 return true;
             }
             else {
@@ -101,7 +101,7 @@ public class Board {
             Element b = elements[x][y + 1];
             elements [x][y] = b;
             elements [x][y + 1] = a;
-            if (checkForThree(x,y) > 0 || checkForThree(x,y + 1)){
+            if (checkForThree(x,y) > 0 || checkForThree(x,y + 1)>0){
                 return true;
             }
             else {
@@ -113,7 +113,7 @@ public class Board {
             Element b = elements[x + 1][y];
             elements [x][y] = b;
             elements [x + 1][y] = a;
-            if (checkForThree(x,y) > 0 || checkForThree(x + 1,y)){
+            if (checkForThree(x,y) > 0 || checkForThree(x + 1,y)>0){
                 return true;
             }
             else {
@@ -128,6 +128,9 @@ public class Board {
         return false;
     }
 
+    /**
+     * Generate an element on each null position of the board
+     */
     public void generateElement(){
         Random rand = new Random();
         ArrayList<int[]> newElements = new ArrayList<>();
@@ -148,6 +151,11 @@ public class Board {
         }
     }
 
+    /**
+     * remove an element in a position of the board
+     * @param x position x of the element
+     * @param y position y of the element
+     */
     public void removeElement(int x, int y){
         x--;
         y--;
@@ -211,6 +219,35 @@ public class Board {
     }
     public void refreshColumn(int column){
 
+    }
+
+    /**
+     * checks if exists three elements given a position
+     * @param x position x
+     * @param y position y
+     * @return
+     */
+    public int checkForThree(int x, int y){
+
+
+        return 1;
+    }
+
+    public ArrayList<Element> getAdjoints(int x, int y) {
+        ArrayList<Element> adjoints = new ArrayList<>();
+        int[] coordenada_i = {0,-1,0,1};
+        int[] coordenada_j = {-1,0,1,0};
+        int nueva_posicion_i = 0;
+        int nueva_posicion_j = 0;
+        for (int k = 0; k < 4 ; k++) {
+            nueva_posicion_i = x + coordenada_i[k];
+            nueva_posicion_j = y + coordenada_j[k];
+            if((nueva_posicion_i >= 0 && nueva_posicion_i <length) && (nueva_posicion_j >= 0 && nueva_posicion_j <widht)) {
+                adjoints.add(elements[nueva_posicion_i][nueva_posicion_j]);
+            }
+
+        }
+        return  adjoints;
     }
 
 
