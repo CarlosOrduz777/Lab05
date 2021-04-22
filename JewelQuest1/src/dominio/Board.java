@@ -1,112 +1,191 @@
 package dominio;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 public class Board {
-    private int widht;
-    private int height;
-    private String[][] completed;
-    int score;
+    private int widht = 10;
+    private int length = 10;
+    private Integer[][] completed;
+    private int score = 0;
+    private Element[][] elements;
 
-    public Board(int widht, int height){
+    public Board(){
+        completed = new Integer[length][widht];
+        elements = new Element[length][widht];
+        generateElement();
+        score = 0;
+    }
+    public Board(int widht, int length){
         this.widht = widht;
-        this.height = height;
-        completed = new String[widht][height];
-        for(int i = 0; i<completed.length;i++){
-            for(int j=0;j<completed[0].length;j++){
-                completed[i][j] = null;
-            }
-        }
-
+        this.length = length;
+        completed = new Integer[length][widht];
+        elements = new Element[length][widht];
+        generateElement();
+        score = 0;
     }
 
+    public Board(String[][] elements){
+        widht = elements[0].length;
+        length = elements.length;
+        completed = new Integer[length][widht];
+        this.elements = new Element[length][widht];
+        for (int i = 0; i < length; i ++){
+            for (int j = 0; j < widht; j ++){
+                if(elements[i][j] == "Blue"){
+                    Element element = new NormalJewel(0);
+                    this.elements[i][j] = element;
+                }
+                else if(elements[i][j] == "Green"){
+                    Element element = new NormalJewel(1);
+                    this.elements[i][j] = element;
+                }
+                else if(elements[i][j] == "Coin"){
+                    Element element = new NormalJewel(2);
+                    this.elements[i][j] = element;
+                }
+                else if(elements[i][j] == "Cian skull"){
+                    Element element = new NormalJewel(3);
+                    this.elements[i][j] = element;
+                }
+                else if(elements[i][j] == "Yellow skull"){
+                    Element element = new NormalJewel(4);
+                    this.elements[i][j] = element;
+                }
+                else {
+                    Random rand = new Random();
+                    Element element = new NormalJewel(rand.nextInt(5));
+                    this.elements[i][j] = element;
+                }
+                for (int i = 0; i < length; i++){
+                    for (int j = 0; j < widht; j++){
+                        checkForThree(i,j);
+                        }
+                    }
+                }
+                score = 0;
+            }
+        }
+    }
 
-    /**
-     *
-     * @param x x direction
-     * @param y y direction
-     * @param direction u for up movement, r for right movement
-     *                  l for left movemnt, d for dowm movement
-     */
-    public boolean moveElement(int x,int y,char direction){
-        String element = completed[x][y];
-        boolean succesfulMove = false;
-        switch (direction) {
-            case 'u' -> {
-                String secondElement = completed[x - 1][y];
-                completed[x][y] = secondElement;
-                completed[x - 1][y] = element;
-                if(!(checkWinByPositionRow(x,y) && checkWinByPositionRow(x-1,y) && checkWinByPositionColumn(x,y) && checkWinByPositionColumn(x-1,y))){
-                    completed[x][y] = element;
-                    completed[x-1][y] = secondElement;
-                    succesfulMove = false;
-                }else{
-                    checkWinColumn(y);
-                    succesfulMove =true;
-                }
+    public boolean moveElement(int x, int y, char direction){
+        x--;
+        y--;
+        //Usar excepciones para verificar elementos fuera de rango
+        if (direction == 'u'){
+           Element a = elements[x][y];
+           Element b = elements[x][y - 1];
+           elements [x][y] = b;
+           elements [x][y - 1] = a;
+            if (checkForThree(x,y) > 0 || checkForThree(x,y - 1)){
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        else if (direction == 'l'){
+            Element a = elements[x][y];
+            Element b = elements[x - 1][y];
+            elements [x][y] = b;
+            elements [x - 1][y] = a;
+            if (checkForThree(x,y) > 0 || checkForThree(x - 1,y)){
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        else if (direction == 'd'){
+            Element a = elements[x][y];
+            Element b = elements[x][y + 1];
+            elements [x][y] = b;
+            elements [x][y + 1] = a;
+            if (checkForThree(x,y) > 0 || checkForThree(x,y + 1)){
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        else if (direction == 'r'){
+            Element a = elements[x][y];
+            Element b = elements[x + 1][y];
+            elements [x][y] = b;
+            elements [x + 1][y] = a;
+            if (checkForThree(x,y) > 0 || checkForThree(x + 1,y)){
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        /*
+        else {
+            throw fuera de rango
+        }
+         */
+        return false;
+    }
 
-            }
-            case 'd' -> {
-                String elementDown = completed[x + 1][y];
-                completed[x][y] = elementDown;
-                completed[x + 1][y] = element;
-                if(!(checkWinByPositionRow(x,y) && checkWinByPositionRow(x+1,y) && checkWinByPositionColumn(x,y) && checkWinByPositionColumn(x+1,y))){
-                    completed[x][y] = element;
-                    completed[x-1][y] = elementDown;
-                    succesfulMove = false;
-                }else {
-                    checkWinColumn(y);
-                    succesfulMove = true;
-                }
-            }
-            case 'l' -> {
-                String elementLeft = completed[x][y - 1];
-                completed[x][y] = elementLeft;
-                completed[x][y - 1] = element;
-                if(!(checkWinByPositionRow(x,y) && checkWinByPositionRow(x,y-1) && checkWinByPositionColumn(x,y) && checkWinByPositionColumn(x,y-1))){
-                    completed[x][y] = element;
-                    completed[x-1][y] = elementLeft;
-                    succesfulMove = false;
-                }else {
-                    succesfulMove = true;
-                }
-            }
-            case 'r' -> {
-                String elementRight = completed[x][y + 1];
-                completed[x][y] = elementRight;
-                completed[x][y + 1] = element;
-                if(!(checkWinByPositionRow(x,y) && checkWinByPositionRow(x,y+1) && checkWinByPositionColumn(x,y) && checkWinByPositionColumn(x,y+1))){
-                    completed[x][y] = element;
-                    completed[x-1][y] = elementRight;
-                    succesfulMove = false;
-                }else {
-                    succesfulMove = true;
+    public void generateElement(){
+        Random rand = new Random();
+        ArrayList<int[]> newElements = new ArrayList<>();
+        for (int i = 0; i < length; i++){
+            for (int j = 0; j < widht; j++){
+                if (elements[i][j] == null){
+                    Element newElement = new NormalJewel(rand.nextInt(5));
+                    elements[i][j] = newElement;
+                    int[] pos = new int[]{i,j};
+                    newElements.add(pos);
                 }
             }
         }
-        return succesfulMove;
+        if (newElements.size() > 0){
+            for (int[] newElement: newElements){
+                checkForThree(newElement[0],newElement[1]);
+            }
+        }
     }
 
-    /**
-     * Remove an element from the board
-     * @param x position x of the element
-     * @param y position y of the element
-     */
     public void removeElement(int x, int y){
-        completed[x][y] = null;
+        x--;
+        y--;
+        elements[x][y] = null;
     }
+
+    public int getWidth(){return widht;}
+
+    public int getLength(){return  length;}
+
+    public String[][] getElements(){
+        String[][] elementsStrings = new String[length][widht];
+        for (int i = 0; i < length; i ++){
+            for (int j = 0; j < widht; j++){
+                if (elements[i][j] != null){
+                    elementsStrings[i][j] = elements[i][j].getName();
+                }
+            }
+        }
+        return elementsStrings;
+    }
+
+    public int getScore(){return score;}
+
+    private void setScore(int score){this.score = score;}
+
+    public Integer[][] getCompleted(){return completed;}
 
     /**
      * look for winner element in a complete column
      * @param column that we are looking for winner pieces
      */
     public void checkWinColumn(int column){
-        for(int i =0;i<height;i++){
+        for(int i =0;i<length;i++){
             checkWinByPositionColumn(i,column);
             checkWinByPositionRow(i,column);
         }
     }
-
-
-
     /**
      * Check if there are winner pieces given a position
      * @param x position x in the board
@@ -121,7 +200,6 @@ public class Board {
         }
         return false;
     }
-
     public boolean checkWinByPositionRow(int x, int y){
         if(completed[x][y-1].equals(completed[x][y]) && completed[x][y+1].equals(completed[x][y])){
             removeElement(x,y-1);
@@ -131,7 +209,6 @@ public class Board {
         }
         return false;
     }
-
     public void refreshColumn(int column){
 
     }
