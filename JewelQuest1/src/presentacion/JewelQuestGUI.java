@@ -16,12 +16,13 @@ import java.util.Random;
 public class JewelQuestGUI extends JFrame implements ActionListener {
     private JMenuBar menuBar;
     private JMenu menu;
-    private JMenuItem nuevo,abrir,salvar,salvarComo,salir;
+    private JMenuItem nuevo,abrir,salvar,salvarComo,salir,cambiarColor;
     private JLabel fondo;
     private JLabel score;
     private JLabel moves;
     private JPanel grillaBotones;
     private JButton jugar;
+    private ArrayList<JButton> joyas = new ArrayList<>();
     private JButton scoreBoard;
     private JButton menuPrincipal;
     private JLabel titulo;
@@ -90,6 +91,8 @@ public class JewelQuestGUI extends JFrame implements ActionListener {
         menu.add(salvar);
         salvarComo = new JMenuItem("Salvar Como");
         menu.add(salvarComo);
+        cambiarColor = new JMenuItem("Cambiar el color del fondo");
+        menu.add(cambiarColor);
         salir = new JMenuItem("Salir");
         menu.add(salir);
     }
@@ -101,9 +104,10 @@ public class JewelQuestGUI extends JFrame implements ActionListener {
             for (int j = 0; j < 6;j++){
                 JButton joya = new JButton("joya");
                 joya.setBackground(Color.YELLOW);
+                joya.setBorder(BorderFactory.createMatteBorder(10,30,10,30,Color.BLACK));
+                joyas.add(joya);
                 elementos.add(joya);
                 elementos.setBackground(Color.black);
-                elementos.setBorder(BorderFactory.createMatteBorder(20,20,20,20,Color.BLACK));
             }
         }
         menuPrincipal = new JButton("Main menu");
@@ -143,6 +147,7 @@ public class JewelQuestGUI extends JFrame implements ActionListener {
         salir.addActionListener(this);
         abrir.addActionListener(this);
         salvar.addActionListener(this);
+        cambiarColor.addActionListener(this);
     }
     public void actionPerformed(ActionEvent e){
         if(e.getSource() == salir){
@@ -155,8 +160,19 @@ public class JewelQuestGUI extends JFrame implements ActionListener {
         else if (e.getSource() == jugar){
             jugarAccion();
         }
-        else if (e.getSource() == menuPrincipal){
+        else if (e.getSource() == menuPrincipal) {
             menuPrincipalAccion();
+        }
+        else if (e.getSource() == cambiarColor){
+            cambiarColorAccion();
+        }
+    }
+    private  void cambiarColorAccion(){
+        JColorChooser sel = new JColorChooser();
+        Color color = sel.showDialog(null, "Seleccione un color", Color.BLACK);
+        elementos.setBackground(color);
+        for (JButton joya: joyas){
+            joya.setBorder(BorderFactory.createMatteBorder(10,30,10,30,color));
         }
     }
     private void menuPrincipalAccion(){
