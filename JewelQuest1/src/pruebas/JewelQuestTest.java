@@ -1,3 +1,4 @@
+/*
 package pruebas;
 
 import aplicacion.*;
@@ -37,7 +38,7 @@ public class JewelQuestTest {
                 {"Coin", "Blue", "Blue"}, {"Blue", "Coin", "Green"}};
         jq = new JewelQuest(elements);
      */
-
+/*
     @Test
     public void shouldMoveElement(){
         String[][] elements;
@@ -75,6 +76,5 @@ public class JewelQuestTest {
 
 
 
-
-
 }
+*/

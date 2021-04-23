@@ -3,23 +3,33 @@ package presentacion;
 import org.w3c.dom.DOMImplementation;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Random;
 
 public class JewelQuestGUI extends JFrame implements ActionListener {
     private JMenuBar menuBar;
     private JMenu menu;
-    private JMenuItem nuevo,abrir,salvar,salvarComo,salir;
+    private JMenuItem nuevo,abrir,salvar,salvarComo,salir,cambiarColor;
     private JLabel fondo;
+    private JLabel score;
+    private JLabel moves;
     private JPanel grillaBotones;
     private JButton jugar;
+    private ArrayList<JButton> joyas = new ArrayList<>();
     private JButton scoreBoard;
+    private JButton menuPrincipal;
     private JLabel titulo;
     private JPanel principal;
+    private JPanel juego;
+    private JPanel elementos;
+    private JPanel puntajes;
 
     private JewelQuestGUI(){
         this.prepareElementos();
@@ -33,20 +43,23 @@ public class JewelQuestGUI extends JFrame implements ActionListener {
         setLocationRelativeTo(null);
 
         prepareElementosMenu();
+        prepareElementosTablero();
         prepareElementosPrincipal();
+
     }
     private void prepareElementosPrincipal(){
+
         fondo = new JLabel();
         fondo.setIcon(new ImageIcon(getClass().getResource("fondo.jpg")));
+        fondo.setOpaque(false);
         Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
         fondo.setBounds(270,10,200,70);
-
         titulo = new JLabel("JEWEL  \n"+"QUEST");
         principal = new JPanel();
-        principal.add(fondo);
-        principal.add(titulo);
+        principal.setLayout(new BorderLayout());
+        principal.add(fondo, BorderLayout.CENTER);
+        principal.add(titulo,BorderLayout.NORTH);
         add(principal);
-
 
         grillaBotones = new JPanel();
         Dimension dimension = new Dimension();
@@ -63,11 +76,7 @@ public class JewelQuestGUI extends JFrame implements ActionListener {
         scoreBoard.setSize(d2);
         grillaBotones.add(scoreBoard);
 
-        add(grillaBotones);
-
-
-
-
+        principal.add(grillaBotones,BorderLayout.SOUTH);
     }
     private void prepareElementosMenu(){
         menuBar = new JMenuBar();
@@ -82,9 +91,41 @@ public class JewelQuestGUI extends JFrame implements ActionListener {
         menu.add(salvar);
         salvarComo = new JMenuItem("Salvar Como");
         menu.add(salvarComo);
+        cambiarColor = new JMenuItem("Cambiar el color del fondo");
+        menu.add(cambiarColor);
         salir = new JMenuItem("Salir");
         menu.add(salir);
     }
+    private void prepareElementosTablero(){
+        juego = new JPanel();
+        elementos = new JPanel();
+        elementos.setLayout(new GridLayout(6,6));
+        for (int i = 0; i < 6;i++){
+            for (int j = 0; j < 6;j++){
+                JButton joya = new JButton("joya");
+                joya.setBackground(Color.YELLOW);
+                joya.setBorder(BorderFactory.createMatteBorder(10,30,10,30,Color.BLACK));
+                joyas.add(joya);
+                elementos.add(joya);
+                elementos.setBackground(Color.black);
+            }
+        }
+        menuPrincipal = new JButton("Main menu");
+        menuPrincipal.setBackground(Color.orange);
+        puntajes = new JPanel();
+        puntajes.setLayout(new GridLayout(1,2));
+        score = new JLabel("Score :"+" "+"0");
+        moves = new JLabel("Moves :"+" "+"0");
+        puntajes.setBackground(Color.ORANGE);
+        puntajes.add(score);
+        puntajes.add(moves);
+        juego.setLayout(new BorderLayout());
+        juego.add(elementos,BorderLayout.CENTER);
+        juego.add(menuPrincipal,BorderLayout.SOUTH);
+        juego.add(puntajes,BorderLayout.NORTH);
+        add(juego);
+    }
+
     private void prepareAcciones(){
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
@@ -93,14 +134,21 @@ public class JewelQuestGUI extends JFrame implements ActionListener {
             }
         });
         prepareMenuAcciones();
+        prepareMenuPrincipalAcciones();
+        prepareJugarAcciones();
     }
-
+    private void  prepareMenuPrincipalAcciones(){
+        jugar.addActionListener(this);
+    }
+    private void  prepareJugarAcciones(){
+        menuPrincipal.addActionListener(this);
+    }
     private void prepareMenuAcciones(){
         salir.addActionListener(this);
         abrir.addActionListener(this);
         salvar.addActionListener(this);
+        cambiarColor.addActionListener(this);
     }
-
     public void actionPerformed(ActionEvent e){
         if(e.getSource() == salir){
             close();
@@ -109,6 +157,39 @@ public class JewelQuestGUI extends JFrame implements ActionListener {
         }else if(e.getSource() == salvar){
             salvarAccion();
         }
+        else if (e.getSource() == jugar){
+            jugarAccion();
+        }
+        else if (e.getSource() == menuPrincipal) {
+            menuPrincipalAccion();
+        }
+        else if (e.getSource() == cambiarColor){
+            cambiarColorAccion();
+        }
+    }
+    private  void cambiarColorAccion(){
+        JColorChooser sel = new JColorChooser();
+        Color color = sel.showDialog(null, "Seleccione un color", Color.BLACK);
+        elementos.setBackground(color);
+        for (JButton joya: joyas){
+            joya.setBorder(BorderFactory.createMatteBorder(10,30,10,30,color));
+        }
+    }
+    private void menuPrincipalAccion(){
+        remove(juego);
+        repaint();
+        revalidate();
+        add(principal);
+        repaint();
+        revalidate();
+    }
+    private void jugarAccion(){
+        remove(principal);
+        repaint();
+        revalidate();
+        add(juego);
+        repaint();
+        revalidate();
     }
     private void abrirAccion(){
         JFileChooser fileChooser = new JFileChooser();
@@ -128,11 +209,13 @@ public class JewelQuestGUI extends JFrame implements ActionListener {
 
         }
     }
-
     private void close(){
         if (JOptionPane.showConfirmDialog(rootPane,"Desea terminar el programa?","Salir",JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
             System.exit(0);
         }
+    }
+    private void refresque(){
+        prepareElementosTablero();
     }
 
     public static void main(String[] args) {
