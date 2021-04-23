@@ -57,16 +57,16 @@ public class Board {
                     Element element = new NormalJewel(rand.nextInt(5));
                     this.elements[i][j] = element;
                 }
-                for (int i = 0; i < length; i++){
-                    for (int j = 0; j < widht; j++){
-                        checkForThree(i,j);
+                for (int k = 0; k < length; k++){
+                    for (int l = 0; l < widht; l++){
+                        checkForThree(k,l);
                         }
                     }
                 }
                 score = 0;
             }
         }
-    }
+
 
     public boolean moveElement(int x, int y, char direction){
         x--;
@@ -184,54 +184,163 @@ public class Board {
 
     public Integer[][] getCompleted(){return completed;}
 
-    /**
-     * look for winner element in a complete column
-     * @param column that we are looking for winner pieces
-     */
-    public void checkWinColumn(int column){
-        for(int i =0;i<length;i++){
-            checkWinByPositionColumn(i,column);
-            checkWinByPositionRow(i,column);
+
+
+    public void refreshColumn(int x,int column){
+        Element[] columnElements = getColumn(x,column);
+        int contadorNulls = 0;
+       ArrayList<Element> elements1 = new ArrayList<>();
+        for (int j = 0; j <columnElements.length ; j++) {
+            if(columnElements[j] != null){
+                elements1.add(columnElements[j]);
+            }else{
+                contadorNulls += 1;
+            }
         }
-    }
-    /**
-     * Check if there are winner pieces given a position
-     * @param x position x in the board
-     * @param y position y in the board
-     */
-    public boolean checkWinByPositionColumn(int x, int y){
-        if(completed[x-1][y].equals(completed[x][y]) && completed[x+1][y].equals(completed[x][y])){
-            removeElement(x-1,y);
-            removeElement(x,y);
-            removeElement(x+1,y);
-            return true;
+        Element[] resultado = new Element[elements1.size() + contadorNulls];
+        Object[] nulls = new Object[contadorNulls];
+        Element[] elements2 = elements1.toArray(new Element[0]);
+        int j = 0;
+        for (int i = 0; i < nulls.length; i++) {
+            resultado[i] = null;
+            j++;
         }
-        return false;
-    }
-    public boolean checkWinByPositionRow(int x, int y){
-        if(completed[x][y-1].equals(completed[x][y]) && completed[x][y+1].equals(completed[x][y])){
-            removeElement(x,y-1);
-            removeElement(x,y);
-            removeElement(x,y+1);
-            return true;
+        for (int i = 0; i < elements2.length ; i++) {
+            resultado[j] = elements2[i];
+            j++;
         }
-        return false;
-    }
-    public void refreshColumn(int column){
+
+        //we replace the new column in the old column
+        for (int i =0 ; i<=x; i++){
+            elements[i][column] = resultado[i];
+        }
+
+        this.generateElement();
 
     }
 
     /**
-     * checks if exists three elements given a position
+     * checks if exists three equal elements given a position
      * @param x position x
      * @param y position y
      * @return
      */
     public int checkForThree(int x, int y){
+        ArrayList<Element> adjoints = getAdjoints(x,y);
+        for(Element e:adjoints){
+            if(isUp(x,y,e) && elements[x][y].equals(e)){
+                if(elements[x][y].equals(elements[x-2][y])){
+                    removeElement(x,y);
+                    removeElement(x-1,y);
+                    removeElement(x-2,y);
+                    refreshColumn(x,y);
+                    completed[x][y] = 1;
+                    completed[x-1][y] = 1;
+                    completed[x-2][y] = 1;
+                }
+                if(elements[x][y].equals(elements[x+1][y])){
+                    removeElement(x,y);
+                    removeElement(x-1,y);
+                    removeElement(x+1,y);
+                    refreshColumn(x+1,y);
 
+                    completed[x][y] = 1;
+                    completed[x-1][y] = 1;
+                    completed[x+1][y] = 1;
 
+                }
+            }else if(isDown(x,y,e) && elements[x][y].equals(e)){
+                if(elements[x][y].equals(elements[x+2][y])){
+                    removeElement(x,y);
+                    removeElement(x+1,y);
+                    removeElement(x+2,y);
+                    refreshColumn(x,y);
+
+                    completed[x][y] = 1;
+                    completed[x+1][y] = 1;
+                    completed[x+2][y] = 1;
+                }
+                if(elements[x][y].equals(elements[x-1][y])){
+                    removeElement(x,y);
+                    removeElement(x+1,y);
+                    removeElement(x-1,y);
+                    refreshColumn(x+1,y);
+
+                    completed[x][y] = 1;
+                    completed[x+1][y] = 1;
+                    completed[x-1][y] = 1;
+                }
+
+            }else if(isRight(x,y,e) && elements[x][y].equals(e)){
+                if(elements[x][y].equals(elements[x][y+2])){
+                    removeElement(x,y);
+                    removeElement(x,y+1);
+                    removeElement(x,y+2);
+
+                    refreshColumn(x,y);
+                    refreshColumn(x,y+1);
+                    refreshColumn(x,y+2);
+
+                    completed[x][y] = 1;
+                    completed[x][y+1] = 1;
+                    completed[x][y+2] = 1;
+
+                }
+                if(elements[x][y].equals(elements[x][y-1])){
+                    removeElement(x,y);
+                    removeElement(x,y-1);
+                    removeElement(x,y+1);
+
+                    refreshColumn(x,y);
+                    refreshColumn(x,y-1);
+                    refreshColumn(x,y+1);
+
+                    completed[x][y] = 1;
+                    completed[x][y-1] = 1;
+                    completed[x][y+1] = 1;
+                }
+
+            }else if(isLeft(x,y,e) && elements[x][y].equals(e)){
+                if(elements[x][y].equals(elements[x][y-2])){
+                    removeElement(x,y);
+                    removeElement(x,y-1);
+                    removeElement(x,y-2);
+
+                    refreshColumn(x,y);
+                    refreshColumn(x,y-1);
+                    refreshColumn(x,y-2);
+
+                    completed[x][y] = 1;
+                    completed[x][y-1] = 1;
+                    completed[x][y-2] = 1;
+
+                }
+                if (elements[x][y].equals(elements[x][y+1])){
+                    removeElement(x,y);
+                    removeElement(x,y-1);
+                    removeElement(x,y+1);
+
+                    refreshColumn(x,y);
+                    refreshColumn(x,y-1);
+                    refreshColumn(x,y+1);
+
+                    completed[x][y] = 1;
+                    completed[x][y-1] = 1;
+                    completed[x][y+1] = 1;
+                }
+            }
+        }
         return 1;
     }
+    public Element[] getColumn(int x, int column){
+        Element[] columnElements = new Element[x];
+
+        for (int i = 0; i <= x; i++) {
+            columnElements[i] = elements[i][column];
+        }
+        return columnElements;
+    }
+
 
     public ArrayList<Element> getAdjoints(int x, int y) {
         ArrayList<Element> adjoints = new ArrayList<>();
@@ -248,6 +357,22 @@ public class Board {
 
         }
         return  adjoints;
+    }
+    public Element getElement(int x ,int y){
+        return elements[x][y];
+    }
+
+    public boolean isUp(int x ,int y,Element e){
+        return elements[x-1][y].equals(e);
+    }
+    public boolean isDown(int x,int y,Element e){
+        return elements[x+1][y].equals(e);
+    }
+    public boolean isRight(int x , int y,Element e){
+        return elements[x][y+1].equals(e);
+    }
+    public boolean isLeft(int x, int y,Element e){
+        return  elements[x][y-1].equals(e);
     }
 
 
