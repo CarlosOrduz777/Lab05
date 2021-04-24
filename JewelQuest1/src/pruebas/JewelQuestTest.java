@@ -1,3 +1,4 @@
+/*
 package pruebas;
 
 import dominio.Board;
@@ -38,7 +39,7 @@ public class JewelQuestTest {
                 {"Coin", "Blue", "Blue"}, {"Blue", "Coin", "Green"}};
         jq = new JewelQuest(elements);
      */
-
+/*
     @Test
     public void shouldMoveElement(){
         String[][] elements;
@@ -138,8 +139,7 @@ public class JewelQuestTest {
         Board board = new Board(elements);
         assertEquals(board.getLength(),3);
     }
-
-    @Test
+     @Test
     public void shouldGetElementsBoard(){
         String[][] elements;
         elements = new String[][]{
@@ -161,3 +161,4 @@ public class JewelQuestTest {
         assertEquals(board.getScore(),3);
     }
 }
+*/
