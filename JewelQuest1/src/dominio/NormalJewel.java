@@ -38,8 +38,13 @@ public class NormalJewel implements Element{
         return name;
     }
 
+    @Override
+    public boolean equalss(Element e){
+        return this.getName() == e.getName();
+    }
 
     public int getPoints(){
         return points;
     }
+
 }

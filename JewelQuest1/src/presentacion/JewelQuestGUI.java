@@ -52,16 +52,13 @@ public class JewelQuestGUI extends JFrame implements ActionListener {
         Dimension dimension = new Dimension();
         dimension.setSize(40,30);
         grillaBotones.setSize(dimension);
-        grillaBotones.setLayout(new GridLayout(2,1));
+        grillaBotones.setLayout(new GridLayout(1,1));
         grillaBotones.setLocation(50,50);
         jugar = new JButton("Play");
         Dimension d2 = new Dimension();
         d2.setSize((int)dimension.getWidth()/20,(int)dimension.getHeight()/20);
         jugar.setSize(d2);
         grillaBotones.add(jugar);
-        scoreBoard = new JButton("Score Board");
-        scoreBoard.setSize(d2);
-        grillaBotones.add(scoreBoard);
 
         add(grillaBotones);
 

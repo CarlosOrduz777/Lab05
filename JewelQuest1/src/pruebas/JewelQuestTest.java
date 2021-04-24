@@ -1,6 +1,5 @@
 package pruebas;
 
-import aplicacion.*;
 import dominio.Board;
 import dominio.JewelQuest;
 import org.junit.Assert;
@@ -106,7 +105,7 @@ public class JewelQuestTest {
                 {"Blue", "Coin", "Green"}};
         Board board = new Board(elements);
         board.removeElement(1,1);
-        assertTrue(elements[0][0] == null);
+        assertEquals(board.getElements()[1][1] , null);
     }
     @Test
     public void shouldCheckForThree(){

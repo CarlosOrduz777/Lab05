@@ -1,7 +1,7 @@
 package dominio;
 
 public class JewelQuest {
-    private Board board;
+    private final Board board;
 
     public JewelQuest(){board = new Board();}
 
@@ -15,10 +15,11 @@ public class JewelQuest {
 
     public boolean getStatus(){
         boolean win = true;
-        for (Integer[] integers:board.getCompleted()){
-            for (Integer integer: integers){
-                if (integer == 0){
+        for (int[] integers:board.getCompleted()){
+            for (int integer: integers){
+                if (integer == 0) {
                     win = false;
+                    break;
                 }
             }
         }

@@ -7,5 +7,5 @@ public interface Element {
     String SKULL = "Cian skull";
     String SKULL_0 = "Yellow skull";
     String getName();
-    int getPoints();
+    boolean equalss(Element e);
 }
