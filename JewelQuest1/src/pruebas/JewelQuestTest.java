@@ -1,7 +1,8 @@
 /*
 package pruebas;
 
-import aplicacion.*;
+import dominio.Board;
+import dominio.JewelQuest;
 import org.junit.Assert;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -73,8 +74,91 @@ public class JewelQuestTest {
         jq.moveElement(4,2,'l');
         assertTrue(jq.getStatus());
     }
-
-
-
+    @Test
+    public void shouldMoveBoard(){
+        String[][] elements;
+        elements = new String[][]{
+                {"Blue", "Green", "Green"},
+                {"Coin", "Blue", "Blue"},
+                {"Blue", "Coin", "Green"}};
+        Board board = new Board(elements);
+        assertTrue(board.moveElement(2,2,'l'));
+    }
+    @Test
+    public void  shouldGenerateNewElementsBoard(){
+        String[][] elements;
+        elements = new String[][]{
+                {"Blue", "Green", "Green"},
+                {"Coin", "Blue", "Blue"},
+                {"Blue", "Coin", "Green"}};
+        Board board = new Board(elements);
+        board.moveElement(2,2,'l');
+        assertTrue(elements[0][0] != null);
+        assertTrue(elements[0][1] != null);
+        assertTrue(elements[0][2] != null);
+    }
+    @Test
+    public void shouldRemoveFromBoard(){
+        String[][] elements;
+        elements = new String[][]{
+                {"Blue", "Green", "Green"},
+                {"Coin", "Blue", "Blue"},
+                {"Blue", "Coin", "Green"}};
+        Board board = new Board(elements);
+        board.removeElement(1,1);
+        assertEquals(board.getElements()[1][1] , null);
+    }
+    @Test
+    public void shouldCheckForThree(){
+        String[][] elements;
+        elements = new String[][]{
+                {"Blue", "Green", "Green"},
+                {"Coin", "Blue", "Blue"},
+                {"Blue", "Coin", "Green"}};
+        Board board = new Board(elements);
+        board.moveElement(2,2,'l');
+        assertEquals(board.getScore(),3);
+    }
+    @Test
+    public void shouldGetWidth(){
+        String[][] elements;
+        elements = new String[][]{
+                {"Blue", "Green", "Green"},
+                {"Coin", "Blue", "Blue"},
+                {"Blue", "Coin", "Green"}};
+        Board board = new Board(elements);
+        assertEquals(board.getWidth(),3);
+    }
+    @Test
+    public void shouldGetLength(){
+        String[][] elements;
+        elements = new String[][]{
+                {"Blue", "Green", "Green"},
+                {"Coin", "Blue", "Blue"},
+                {"Blue", "Coin", "Green"}};
+        Board board = new Board(elements);
+        assertEquals(board.getLength(),3);
+    }
+     @Test
+    public void shouldGetElementsBoard(){
+        String[][] elements;
+        elements = new String[][]{
+                {"Blue", "Green", "Green"},
+                {"Coin", "Blue", "Blue"},
+                {"Blue", "Coin", "Green"}};
+        Board board = new Board(elements);
+        assertArrayEquals(elements, board.getElements());
+    }
+    @Test
+    public void shouldGetScore(){
+        String[][] elements;
+        elements = new String[][]{
+                {"Blue", "Green", "Green"},
+                {"Coin", "Blue", "Blue"},
+                {"Blue", "Coin", "Green"}};
+        Board board = new Board(elements);
+        board.moveElement(2,2,'l');
+        assertEquals(board.getScore(),3);
+    }
 }
 */
